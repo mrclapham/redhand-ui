@@ -1,6 +1,7 @@
-export default {
+/* Auto generated on 2024-06-16T08:55:43.113Z – do not edit */ 
+        export default {
   "colors": {
-    "primary": {
+    "Primary": {
       "10": "#e86c001a",
       "20": "#e86c0033",
       "30": "#e86c004d",
@@ -12,7 +13,7 @@ export default {
       "90": "#e86c00e6",
       "100": "#e86c00"
     },
-    "secondary": {
+    "Secondary": {
       "10": "#fdcc4a1a",
       "20": "#fdcc4a33",
       "30": "#fdcc4a4d",
@@ -24,7 +25,7 @@ export default {
       "90": "#fdcc4ae6",
       "100": "#fdcc4a"
     },
-    "neutral": {
+    "Neutral": {
       "1": "#2c3a4b",
       "2": "#394452",
       "3": "#545d69",
@@ -37,7 +38,7 @@ export default {
       "black": "#09101d",
       "white": "#ffffff"
     },
-    "accent": {
+    "Accent": {
       "1": "#ecb2f2",
       "2": "#2d6a6a",
       "3": "#e9ad8c",
@@ -51,7 +52,7 @@ export default {
       "525": "#7cc6d640",
       "615": "#e1604d26"
     },
-    "status": {
+    "Status": {
       "success": "#287d3c",
       "successbg": "#edf9f0",
       "warning": "#b95000",
@@ -61,7 +62,7 @@ export default {
       "info": "#2e5aac",
       "infobg": "#eef2fa"
     },
-    "actionprimary": {
+    "ActionPrimary": {
       "default": "#e86c00",
       "hover": "#cc5f00",
       "active": "#b25300",
@@ -71,7 +72,7 @@ export default {
       "inverted": "#ffffff",
       "visited": "#5e38ba"
     },
-    "actionsecondary": {
+    "ActionSecondary": {
       "default": "#19ab4f",
       "hover": "#0c9e42",
       "active": "#009236",
@@ -81,7 +82,7 @@ export default {
       "inverted": "#ffffff",
       "visited": "#5e38ba"
     },
-    "actionneutral": {
+    "ActionNeutral": {
       "default": "#9098a1",
       "hover": "#858c94",
       "active": "#798087",
@@ -91,5 +92,27 @@ export default {
       "inverted": "#ffffff",
       "visited": "#5e38ba"
     }
+  },
+  "lineHeights": {
+    "0": "76",
+    "1": "56",
+    "2": "48",
+    "3": "64",
+    "4": "40",
+    "5": "52",
+    "6": "44",
+    "7": "36",
+    "8": "32",
+    "9": "28",
+    "10": "24",
+    "11": "20",
+    "12": "16",
+    "13": "12",
+    "14": "AUTO",
+    "15": "72"
+  },
+  "fontFamily": {
+    "source-sans-pro": "Source Sans Pro",
+    "inter": "Inter"
   }
 }

@@ -13,7 +13,7 @@ describe('stringUtils', () => {
     describe('makeKeyString', () => {
         it('should return a string', () => {
             const result = makeKeyString('Primary 100%');
-            expect(result).toEqual('primary100');
+            expect(result).toEqual('Primary100');
         });
         it('should return a string with a removed string', () => {
             const result = makeKeyString('Primary 100%', 'Primary');

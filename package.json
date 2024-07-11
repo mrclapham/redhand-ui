@@ -16,7 +16,6 @@
   "scripts": {
     "dev": "vite",
     "build": "yarn tokens && tsc && vite build",
-    "tokens": "node build-tokens",
     "token": "npx esno BuildTools/design-token-builder.ts",
     "tw:build": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch",
     "tw:build:post": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch",

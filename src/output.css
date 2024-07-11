@@ -563,6 +563,15 @@ video {
   background-color: #cc1f1a;
 }
 
+.btn-blue2 {
+  background-color: #3490dc;
+  color: #fff;
+}
+
+.btn-blue2:hover {
+  background-color: #2779bd;
+}
+
 .inset-10 {
   inset: 2.5rem;
 }
@@ -575,9 +584,8 @@ video {
   border-radius: 9999px;
 }
 
-.bg-primary-100 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(232 108 0 / var(--tw-bg-opacity));
+.bg-Secondary-80 {
+  background-color: #fdcc4acc;
 }
 
 .p-3 {

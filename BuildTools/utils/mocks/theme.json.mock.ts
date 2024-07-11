@@ -678,5 +678,14 @@ export const shortTokens = {
       },
       "type": "typography",
       "description": "Heading style"
-    }
+  },
+  "StrapLine": {
+    "value": {
+      "fontFamily": "{fontFamilies.inter}",
+      "fontSize": "{fontSize.2}",
+      "lineHeight": "{lineHeights.2}"
+    },
+    "type": "typography",
+    "description": "Strapline style"
+},
   }

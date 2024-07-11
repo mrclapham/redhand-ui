@@ -10,7 +10,7 @@ export type ButtonProps = {
 
 export const Button = ({ children = undefined, onclick = ()=> {}, variant = 'primary',  size = 'medium', label="Button" }: ButtonProps) => {
     
-    return <button className={`button-sass button-sass-${variant} button-sass-${size} btn-red`} onClick={onclick}>
+    return <button className={ ` font-sourcesanspro  button-sass button-sass-${variant} button-sass-${size} btn-red`} onClick={onclick}>
         <span>{`${label}`}</span>
         {children}</button>;
     };

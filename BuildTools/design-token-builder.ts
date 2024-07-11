@@ -3,15 +3,16 @@ import fs from "fs";
 import path from "path";
 import { FormatterArguments } from "style-dictionary/types/Format";
 import { extractThemes } from "./utils/extractThemes";
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 import { Config } from "style-dictionary";
 
 import { writeToFile } from "./utils/WriteToFile";
 import { removeSuffix } from "./utils/stringUtils";
-import { TailwindThemeConfig, tailwindConfigBuilder } from "./utils/tailwindConfigBuilder";
-import { tokens as LightTheme } from "../design_token_exports/light_theme/ts/tokens";
-import { tokens as DarkTheme } from "../design_token_exports/dark_theme/ts/tokens";
+import {
+    TailwindThemeConfig,
+    tailwindConfigBuilder,
+} from "./utils/tailwindConfigBuilder";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -29,7 +30,9 @@ type Section = Record<string, Token> | string[];
 
 export type Theme = Record<string, Section> | string[];
 
-export type DesignTokensFigma<T extends Record<string, unknown> = Record<string, unknown>> = {
+export type DesignTokensFigma<
+    T extends Record<string, unknown> = Record<string, unknown>,
+> = {
     [theme: string]: Theme;
 } & {
     $themes: string[]; // Update the type of $themes property to string[]
@@ -41,28 +44,44 @@ export type DesignTokensFigma<T extends Record<string, unknown> = Record<string,
 /**
  * The path the Figma Design Tokens are saved to
  */
-const getSourceJsonPath = (): string => path.join(__dirname, "../rh_tokens/tokens.json");
+const getSourceJsonPath = (): string =>
+    path.join(__dirname, "../rh_tokens/tokens.json");
 
 /**
  * The path to save the Design Tokens parsed from the main Design Tokens from Token Studio for Figma
  * @returns {string}
  */
-const getDirectoryPath = (): string => path.join(__dirname, "../design_token_converted");
-const getExportsDirectoryPath = (directory: string, filename: string): string => `${path.join(__dirname, "../design_token_exports")}/${directory}/${filename}/`;
-const getTailwindExportsDirectoryPath = (directory: string, filename: string): string => `${path.join(__dirname, "../tailwindConfig")}`;
-
+const getDirectoryPath = (): string =>
+    path.join(__dirname, "../design_token_converted");
+const getExportsDirectoryPath = (directory: string, filename: string): string =>
+    `${path.join(__dirname, "../design_token_exports")}/${directory}/${filename}/`;
+const getTailwindExportsDirectoryPath = (
+    directory: string,
+    filename: string
+): string => `${path.join(__dirname, "../tailwindConfig")}`;
 
 /**
- * Takes the auto-generated .json from Token Studio for Figma and extracts the top level key/value element, 
- * writing them to the file system and naming them as per they key with content as per the JSON content of the value. 
+ * Takes the auto-generated .json from Token Studio for Figma and extracts the top level key/value element,
+ * writing them to the file system and naming them as per they key with content as per the JSON content of the value.
  * @param {string} jPath - the path to save the extracted values to.
  */
 const preprocessTokensJson = (jPath = getSourceJsonPath()): string[] => {
     const tokens: DesignTokensFigma = JSON.parse(fs.readFileSync(jPath, "utf-8"));
-    const { $metadata: { tokenSetOrder } } = tokens;
+    const {
+        $metadata: { tokenSetOrder },
+    } = tokens;
     const extractedThemes = extractThemes(tokenSetOrder, tokens);
-    return extractedThemes.map(([key, data]) => writeToFile(JSON.stringify(data, null, 2), `${key}_theme`, getDirectoryPath(), 'json')).filter(Boolean) as string[];
-}
+    return extractedThemes
+        .map(([key, data]) =>
+            writeToFile(
+                JSON.stringify(data, null, 2),
+                `${key}_theme`,
+                getDirectoryPath(),
+                "json"
+            )
+        )
+        .filter(Boolean) as string[];
+};
 
 /**
  * The generic header for generated files.
@@ -84,17 +103,16 @@ const stylexExport = "javascript/customFormat";
 StyleDictionary.registerFormat({
     name: jsonExport,
     formatter: function ({ dictionary }: FormatterArguments) {
-        const { properties } = dictionary
+        const { properties } = dictionary;
         return `${createDoNotEditHeader()}
       export const tokens = ${JSON.stringify(properties, null, 2)};`;
-
     },
 });
 
 StyleDictionary.registerFormat({
     name: stylexExport,
     formatter: function ({ dictionary }: FormatterArguments) {
-        const { properties } = dictionary
+        const { properties } = dictionary;
         return `${createDoNotEditHeader()}
       import * as stylex from '@stylexjs/stylex'; 
       export const tokens = stylex.defineVars(${JSON.stringify(properties, null, 2)});`;
@@ -104,19 +122,19 @@ StyleDictionary.registerFormat({
 /* CUSTOM FORMATTERS FOR THE STYLE DICTIONARY ENDS */
 
 type platformType = {
-    transformGroup: string,
-    prefix?: string,
-    buildPath: string,
-    files: { [key: string]: string }[]
-}
+    transformGroup: string;
+    prefix?: string;
+    buildPath: string;
+    files: { [key: string]: string }[];
+};
 
-type platformRecordType = Record<string, platformType>
+type platformRecordType = Record<string, platformType>;
 
 type configType = {
-    source: string[],
-    preprocessors: string[],
-    excludeParentKeys: boolean,
-    platforms: platformRecordType
+    source: string[];
+    preprocessors: string[];
+    excludeParentKeys: boolean;
+    platforms: platformRecordType;
 };
 
 export const config: Config = {
@@ -127,7 +145,7 @@ export const config: Config = {
         scss: {
             transformGroup: "scss",
             prefix: "rh",
-            buildPath: getExportsDirectoryPath('theme', 'scss'),
+            buildPath: getExportsDirectoryPath("theme", "scss"),
             files: [
                 {
                     destination: "_variables.scss",
@@ -137,7 +155,7 @@ export const config: Config = {
         },
         css: {
             transformGroup: "css",
-            buildPath: getExportsDirectoryPath('theme', 'css'),
+            buildPath: getExportsDirectoryPath("theme", "css"),
             files: [
                 {
                     destination: "tokens.css",
@@ -147,7 +165,7 @@ export const config: Config = {
         },
         js: {
             transformGroup: "js",
-            buildPath: getExportsDirectoryPath('theme', 'js'),
+            buildPath: getExportsDirectoryPath("theme", "js"),
             files: [
                 {
                     destination: "tokens.js",
@@ -157,7 +175,7 @@ export const config: Config = {
         },
         ts: {
             transformGroup: "js",
-            buildPath: getExportsDirectoryPath('theme', 'ts'),
+            buildPath: getExportsDirectoryPath("theme", "ts"),
             files: [
                 {
                     destination: "tokens.ts",
@@ -167,7 +185,7 @@ export const config: Config = {
         },
         stylex: {
             transformGroup: "js",
-            buildPath: getExportsDirectoryPath('theme', 'stylex'),
+            buildPath: getExportsDirectoryPath("theme", "stylex"),
             files: [
                 {
                     destination: "tokens.stylex.js",
@@ -178,7 +196,11 @@ export const config: Config = {
     },
 };
 
-export const createConfig = (baseConfig: Config, themeName: string, source: string[]): Config => {
+export const createConfig = (
+    baseConfig: Config,
+    themeName: string,
+    source: string[]
+): Config => {
     const { platforms } = baseConfig;
     let newPlatform = { ...platforms };
     if (platforms) {
@@ -189,38 +211,54 @@ export const createConfig = (baseConfig: Config, themeName: string, source: stri
                 ...acc,
                 [current]: {
                     ...platform,
-                    buildPath: getExportsDirectoryPath(removeSuffix(themeName), current)
-                }
-            }
+                    buildPath: getExportsDirectoryPath(removeSuffix(themeName), current),
+                },
+            };
         }, {});
     }
 
     return { ...baseConfig, source: source, platforms: newPlatform } as Config;
-}
-
+};
 
 export const createTailwindConfig = (theme: string = "dark"): void => {
-    const tokens: DesignTokensFigma = JSON.parse(fs.readFileSync(getSourceJsonPath(), "utf-8"));
-    const { $metadata: { tokenSetOrder } } = tokens;
+    const tokens: DesignTokensFigma = JSON.parse(
+        fs.readFileSync(getSourceJsonPath(), "utf-8")
+    );
+    const {
+        $metadata: { tokenSetOrder },
+    } = tokens;
     const extractedThemes = extractThemes(tokenSetOrder, tokens);
     if (extractedThemes.length) {
         extractedThemes.forEach(([key, value]) => {
-            writeToFile(`export default ${JSON.stringify(tailwindConfigBuilder(value as Record<string, unknown>, 'color'), null, 2)}`, `tailwind.theme.${key}.config`, getTailwindExportsDirectoryPath(theme, `tw_config_${key}`), 'js');
+
+            const colors = tailwindConfigBuilder(value as Record<string, unknown>, "color", true);
+            const lineHeights = tailwindConfigBuilder(value as Record<string, unknown>, "lineHeights");
+            const fontFamilies = tailwindConfigBuilder(value as Record<string, unknown>, "fontFamilies");
+            const allStyles = JSON.stringify({...colors, ...lineHeights, ...fontFamilies}, null, 2);
+
+            writeToFile(
+                `/* Auto generated on ${new Date().toISOString()} – do not edit */ 
+        export default ${allStyles}`,
+                `tailwind.theme.${key}.config`,
+                getTailwindExportsDirectoryPath(theme, `tw_config_${key}`),
+                "js"
+            );
         });
     }
     //writeToFile(`export default ${JSON.stringify(tailwindConfigBuilder(), null, 2)}`, `${key}_tailwind.config`, getTailwindExportsDirectoryPath(theme, 'tailwind_config'), 'js');
-}
-
+};
 
 const execute = () => {
     const filePaths = preprocessTokensJson();
     filePaths.forEach((filePath) => {
-        const scopedConfig = createConfig(config, path.basename(filePath), [filePath]);
+        const scopedConfig = createConfig(config, path.basename(filePath), [
+            filePath,
+        ]);
         const styleDictionaryInstance = StyleDictionary.extend(scopedConfig);
         styleDictionaryInstance.cleanAllPlatforms();
         styleDictionaryInstance.buildAllPlatforms();
     });
     createTailwindConfig("dark");
-}
+};
 
 execute();

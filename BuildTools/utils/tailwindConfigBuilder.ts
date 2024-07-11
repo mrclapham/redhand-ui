@@ -76,7 +76,7 @@ export const baseConfig: Config = {
 
 export type typeValueRecord = Record<string, unknown> & {
   type: string;
-  value: string;
+  value: string | Record<string, unknown>;
 };
 export type typeValueRecordWithParent = typeValueRecord & {
   parent: string | null;
@@ -215,7 +215,7 @@ const baseTheme: Partial<TailwindThemeConfig> = {
   },
 };
 
-console.log(baseTheme);
+console.log("screens ::: ",baseTheme);
 
 /**
  * Recursively extracts any nested Objects that contain a specific key
@@ -304,11 +304,11 @@ export const extractTypes = (
   ) as typeValueRecordWithParent[];
 
 
-  /**
-   * 
-   * @param items 
-   * @returns 
-   */
+/**
+ * Takes an array of typeValueRecordWithParent and groups them by parent by creating a key from the parent and keyTitle.
+ * @param items {typeValueRecordWithParent[]} - The items to group by parent
+ * @returns {Record<string, any>} - The grouped items
+ */
 export const groupItemsByParent = (
   items: typeValueRecordWithParent[]
 ): Record<
@@ -339,28 +339,110 @@ export const tailwindConfigThemeBuilder = (
   };
 };
 
-const figmaToTailwindDictionary: Record<string, string> = {
+/* The dictionary to map the figma token keys to tailwind keys */
+export const  figmaToTailwindDictionary: Record<string, string> = {
   color: "colors",
   textCase: "textTransform",
   dimension: "spacing",
   typography: "fontSize",
+  fontFamilies: "fontFamily",
 };
+
+/**
+ * Chests if a value is an Object and not an Array, which are classed as objects in JavaScript.
+ * @param value {any} - The value to check if it is an object and not an array
+ * @returns {boolean}
+ */
+export const isObjectAndNotArray = (value: any): boolean => {
+  if (Array.isArray(value)) {
+    return false
+  }
+  if (typeof value === 'object') {
+    return true
+  }
+  return false
+}
+
+/**
+ * 
+ * @param value {Record<string, unknown>} - The object to convert to an array
+ * @returns 
+ */
+export const arrayOfObjectsToObject = (value: Record<string, unknown>[]): Record<string, unknown> => {
+  //const keys = Object.keys(value);
+  return value.reduce((acc, curr) => ({...acc, ...curr}), {})
+}
 
 /**
  * Extracts the theme from the tokens and builds a tailwind config object for an individual key
  * @param tokens {Record<string, unknown>} - The tokens to extract the theme from. Default is the mocked lightTokens
  * @param key {string} - The key to extract from the tokens. Default is "color"
- * @returns
+ * @returns {Record<string, unknown>}
  */
 export const tailwindConfigBuilder = (
   tokens: Record<string, unknown> = lightTokens,
-  key = "color"
-) => {
-  const colors = groupItemsByParent(extractTypes(tokens, key));
-  console.log("EXTRACTED COLOURS ", colors);
-  return { [figmaToTailwindDictionary[key] || key]: colors };
-  // return tailwindConfigThemeBuilder({
-  //     ...baseTheme,
-  //     ...colors,
-  // });
+  key = "color",
+  nestValues = false
+): Record<string, any> => {
+  const values = nestValues
+    ? groupItemsByParent(extractTypes(tokens, key))
+    : extractTypes(tokens, key)
+      .map((item) => ({ [item.keyTitle]: item.value }))
+      .reduce((acc, curr)=> ({...acc, ...curr}), {} )
+  
+  return { [figmaToTailwindDictionary[key] || key]: values };
+};
+
+/**
+ * Removes curly brackets from a string and returns a tuple with the result and a boolean indicating if the string had curly brackets.
+ * @param {string} value 
+ * @returns [string, boolean]
+ */
+export const removeCurlyBrackets = (value: string): [string, boolean] => {
+  const bracketReg = /{([^}]+)}/;
+  const hasBrackets  = bracketReg.test(value)
+  const regex = /^\{(.*)\}$/;
+  return [value.replace(regex, "$1"), hasBrackets]
+}
+
+/**
+ * Extracts a value from a dataset based on a string path. 
+ * The path should be in the format of {key1.key2.key3}.
+ * @param st {string} - The key to extract the value from formatted as a path in the format of {key1.key2.key3}
+ * @param _data {Record<string, T | Record<string, unknown>>} - The data to extract the value from
+ * @returns {[string, boolean]}
+ */
+export const extractValueFromObjectWithStringKey = <T extends { value?: string }>(st: string, _data: Record<string, T | Record<string, unknown>>): string | undefined => {
+  const [result, bool] = removeCurlyBrackets(st);
+  if (bool) {
+    const path = result.split('.');
+    const [key, ...rest] = path;
+    const extractedData = _data && _data[key] ? _data[key] : undefined;
+    if (rest.length) {
+      return extractValueFromObjectWithStringKey
+        (`{${rest.join('.')}}`, extractedData as unknown as Record<string, T>)
+    }
+    const returnValue = extractedData && extractedData.value ? extractedData.value : extractedData as unknown as string
+    return returnValue ? returnValue.toString() : undefined;
+  }
+};
+
+
+export const createPluginFromTypography = (data: Record<string, unknown>): Record<string, unknown>[] => {
+  const typography: typeValueRecordWithParent[] = extractTypes(data, 'typography');
+
+  return typography.map(({ value, keyTitle }) => {
+    const translatedValues = Object.entries(value as Record<string, unknown>)
+      .map(([key, value]) => {
+        return {
+          [key]: typeof value === 'string' ? extractValueFromObjectWithStringKey
+            (value, data as Record<string, typeValueRecord>) : value
+        }
+      })
+      .reduce((acc, curr) => { return Object.values(curr)[0] !== undefined ? { ...acc, ...curr } : acc }, {});
+    return {[keyTitle]: translatedValues}
+  })
+
+
+
 };
