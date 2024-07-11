@@ -168,16 +168,18 @@ describe('tailwindConfigBuilder', () => {
     describe("createPluginFromTypography", () => { 
         it("Should create a plugin from the 'typography' elements", () => {
 
-            const headingContent = { fontFamily: "Source Sans Pro", fontSize: "11", lineHeight: "56" };
-            const strapLineContent = { fontFamily: "Inter" };
+            const expected = {
+                ".heading": {
+                    "fontFamily": "Source Sans Pro",
+                    "fontSize": "11",
+                    "lineHeight": "56",
+                },
+                ".strapline": {
+                    "fontFamily": "Inter",
+                }
+            }
             const result = createPluginFromTypography(shortTokens);
-            expect(result.length).toEqual(2);
-            expect(result[0]).toEqual(expect.objectContaining({ Heading: expect.objectContaining(headingContent) }));
-            expect(result[1]).toEqual(expect.objectContaining({ StrapLine: expect.objectContaining(strapLineContent) }));
-            expect(result[1]).not.toEqual(expect.objectContaining({ StrapLine: expect.objectContaining({fontSize: expect.any}) }));
-            expect(result[1]).not.toEqual(expect.objectContaining({ StrapLine: expect.objectContaining({lineHeight: expect.any}) }));
-      
-            
+            expect(result).toEqual(expected);
         });
     })
 

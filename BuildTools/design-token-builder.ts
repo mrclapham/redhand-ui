@@ -10,7 +10,7 @@ import { Config } from "style-dictionary";
 import { writeToFile } from "./utils/WriteToFile";
 import { removeSuffix } from "./utils/stringUtils";
 import {
-    TailwindThemeConfig,
+    createPluginFromTypography,
     tailwindConfigBuilder,
 } from "./utils/tailwindConfigBuilder";
 
@@ -196,6 +196,13 @@ export const config: Config = {
     },
 };
 
+/**
+ * Create a new configuration object based on the base configuration object.
+ * @param {Config} baseConfig - the base configuration object.
+ * @param {string} themeName - the name of the theme to create the configuration for.
+ * @param {string[]} source - the source files to use for the configuration.
+ * @returns {Config}
+ */
 export const createConfig = (
     baseConfig: Config,
     themeName: string,
@@ -220,6 +227,10 @@ export const createConfig = (
     return { ...baseConfig, source: source, platforms: newPlatform } as Config;
 };
 
+/**
+ * Create the Tailwind CSS configuration file based on the extracted Design Tokens.
+ * @param {string} theme - the theme to create the Tailwind CSS configuration for.
+ */
 export const createTailwindConfig = (theme: string = "dark"): void => {
     const tokens: DesignTokensFigma = JSON.parse(
         fs.readFileSync(getSourceJsonPath(), "utf-8")
@@ -234,7 +245,10 @@ export const createTailwindConfig = (theme: string = "dark"): void => {
             const colors = tailwindConfigBuilder(value as Record<string, unknown>, "color", true);
             const lineHeights = tailwindConfigBuilder(value as Record<string, unknown>, "lineHeights");
             const fontFamilies = tailwindConfigBuilder(value as Record<string, unknown>, "fontFamilies");
-            const allStyles = JSON.stringify({...colors, ...lineHeights, ...fontFamilies}, null, 2);
+            const allStyles = JSON.stringify({ ...colors, ...lineHeights, ...fontFamilies }, null, 2);
+            
+            const plugins = createPluginFromTypography(tokens[theme] as Record<string, unknown>);
+            console.log("PLUGINS ::::: ",plugins);
 
             writeToFile(
                 `/* Auto generated on ${new Date().toISOString()} – do not edit */ 
@@ -243,10 +257,22 @@ export const createTailwindConfig = (theme: string = "dark"): void => {
                 getTailwindExportsDirectoryPath(theme, `tw_config_${key}`),
                 "js"
             );
+
+
+            writeToFile(
+                `/* Auto generated on ${new Date().toISOString()} – do not edit */ 
+        export default ${JSON.stringify(plugins, null, 2)}`,
+                `tailwind.plugin.${key}.config`,
+                getTailwindExportsDirectoryPath(theme, `tw_plugin_${key}`),
+                "js"
+            );
+
         });
     }
-    //writeToFile(`export default ${JSON.stringify(tailwindConfigBuilder(), null, 2)}`, `${key}_tailwind.config`, getTailwindExportsDirectoryPath(theme, 'tailwind_config'), 'js');
 };
+
+
+    
 
 const execute = () => {
     const filePaths = preprocessTokensJson();
