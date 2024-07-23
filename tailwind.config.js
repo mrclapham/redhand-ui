@@ -1,8 +1,11 @@
 import base from './tailwindConfig/tailwind.base.config';
-import plugins from './tailwindConfig/tailwind.plugins.config';
-import theme from './tailwindConfig/tailwind.theme.config';
+import plugins from './tw-plugins/theme-plugin';
+import theme from './tailwindConfig/tailwind.theme.light.config';
 
 export default {
   ...base,
-  ...plugins, 
-  theme }
+  plugins: [
+    plugins
+  ],
+  theme
+}

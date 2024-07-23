@@ -1,4 +1,7 @@
 import type { Preview } from "@storybook/react";
+import '@fontsource/source-sans-pro';
+import 'tailwindcss/tailwind.css'
+
 import  '../src/output.css'
 
 const preview: Preview = {
