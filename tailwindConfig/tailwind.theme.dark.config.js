@@ -1,4 +1,4 @@
-/* Auto generated on 2024-07-23T10:31:54.431Z – do not edit */ 
+/* Auto generated on 2024-07-23T11:57:57.594Z – do not edit */ 
         export default {
   "colors": {
     "Primary": {

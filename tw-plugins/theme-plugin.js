@@ -1,8 +1,10 @@
 const plugin = require('tailwindcss/plugin');
-const { tokensTheme } = require('../tailwindConfig/tailwind.plugin.dark.config');
+const defaultTheme = require('../tailwindConfig/tailwind.plugin.dark.config');
 
 module.exports = plugin(function ({ addComponents }) {
-  addComponents(tokensTheme);
+  addComponents(
+    defaultTheme
+    );
   addComponents({
     '.btn': {
       padding: '.5rem 1rem',

@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@babel/preset-react": "^7.24.1",
+    "@fontsource/source-sans-pro": "^5.0.8",
     "@stylexjs/stylex": "^0.6.1",
     "@tokens-studio/sd-transforms": "^0.16.1",
     "node-sass": "^9.0.0",

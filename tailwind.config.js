@@ -4,6 +4,8 @@ import theme from './tailwindConfig/tailwind.theme.light.config';
 
 export default {
   ...base,
-  ...plugins, 
+  plugins: [
+    plugins
+  ],
   theme
 }

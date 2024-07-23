@@ -10,8 +10,8 @@ export type ButtonTwProps = {
 
 export const ButtonTw = ({ children = undefined, onclick = ()=> {}, label="Button" }: ButtonTwProps) => {
     
-    return <div className=' bg-Secondary-80'><button className="bg-bluey inset-10 p-3 rounded-full  text-pinky" onClick={onclick}>
+    return <div className=' bg-Secondary-80'><button className="" onClick={onclick}>
         <span>{`${label}`}</span>
-        <span className='btn-blue bg-Primary-100'>just testing</span>
+        <div className=' heading bg-Primary-100'>just testing</div>
         {children}</button></div>;
     };
