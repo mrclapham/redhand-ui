@@ -139,8 +139,6 @@ type configType = {
 
 export const config: Config = {
     source: [getSourceJsonPath()],
-    // preprocessors: ['tokens-studio'],
-    // excludeParentKeys: true,
     platforms: {
         scss: {
             transformGroup: "scss",
@@ -258,7 +256,6 @@ export const createTailwindConfig = (theme: string = "dark"): void => {
                 "js"
             );
 
-
             writeToFile(
                 `/* Auto generated on ${new Date().toISOString()} – do not edit */ 
         export default ${JSON.stringify(plugins, null, 2)}`,
@@ -271,9 +268,9 @@ export const createTailwindConfig = (theme: string = "dark"): void => {
     }
 };
 
-
-    
-
+/**
+ * Execute the build process.
+ */
 const execute = () => {
     const filePaths = preprocessTokensJson();
     filePaths.forEach((filePath) => {

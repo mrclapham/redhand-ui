@@ -1,4 +1,4 @@
-/* Auto generated on 2024-07-11T18:49:59.072Z – do not edit */ 
+/* Auto generated on 2024-07-23T10:31:54.432Z – do not edit */ 
         export default {
   ".heading": {
     "fontFamily": "Source Sans Pro",

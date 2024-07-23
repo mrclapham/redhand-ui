@@ -554,24 +554,6 @@ video {
   --tw-contain-style:  ;
 }
 
-.btn-red {
-  background-color: #e3342f;
-  color: #fff;
-}
-
-.btn-red:hover {
-  background-color: #cc1f1a;
-}
-
-.btn-blue2 {
-  background-color: #3490dc;
-  color: #fff;
-}
-
-.btn-blue2:hover {
-  background-color: #2779bd;
-}
-
 .inset-10 {
   inset: 2.5rem;
 }
@@ -586,6 +568,15 @@ video {
 
 .bg-Secondary-80 {
   background-color: #fdcc4acc;
+}
+
+.bg-Primary-10 {
+  background-color: #e86c001a;
+}
+
+.bg-Primary-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(232 108 0 / var(--tw-bg-opacity));
 }
 
 .p-3 {
